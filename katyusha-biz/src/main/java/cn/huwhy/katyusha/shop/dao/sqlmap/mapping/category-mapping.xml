@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.huwhy.katyusha.shop.dao.CategoryDao">
+  <sql id="COLUMNS">
+    id,`name`
+  </sql>
+  
+  <insert id="save" useGeneratedKeys="true" keyProperty="id" keyColumn="id" parameterType="CategoryPo">
+    insert into category(
+    <include refid="COLUMNS"/>
+    )values(
+    #{id},#{name}
+    ) on duplicate key update
+    `name`=VALUES(`name`)
+  </insert>
+  
+  <!--<insert id="saves" parameterType="java.util.List">-->
+  <!--insert into sku(-->
+  <!--<include refid="COLUMNS" />-->
+  <!--)values-->
+  <!--<foreach collection="list" item="item" index="index"-->
+  <!--separator=",">-->
+  <!--(-->
+  <!--#{item.id}, #{item.productId}, #{item.spec}, #{item.barcode}, #{item.marketPrice}, #{item.price},-->
+  <!--#{item.deleted},#{item.outCode}-->
+  <!--)-->
+  <!--</foreach>-->
+  <!--</insert>-->
+  
+  <select id="get" resultType="CategoryPo" parameterType="java.lang.Integer">
+    select
+    <include refid="COLUMNS"/>
+    from category where id = #{id}
+  </select>
+</mapper>

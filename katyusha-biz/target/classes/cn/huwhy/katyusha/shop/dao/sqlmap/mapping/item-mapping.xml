@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.huwhy.katyusha.shop.dao.ItemDao">
+  <sql id="COLUMNS">
+    id,`category_id`,title,prop_desc,summary,main_img,images,
+    phy_type,status,sale_num,eval_num,low_price,high_price,
+    low_market_price,high_market_price,total_stock,out_code,
+    commission_rate, modified, created
+  </sql>
+  
+  <insert id="save" parameterType="ItemPo">
+    insert into item(
+    <include refid="COLUMNS"/>
+    )values(
+    #{id},#{categoryId},#{title},#{propDesc},#{summary},#{mainImg},
+    #{images},#{phyType.value},#{status.value},#{saleNum},#{evalNum},
+    #{lowPrice},#{highPrice},#{lowMarketPrice},#{highMarketPrice},
+    #{totalStock},#{outCode},#{commissionRate},#{modified},#{created}
+    ) on duplicate key update
+    `category_id`=VALUES(`category_id`),`title`=VALUES(`title`),
+    `prop_desc`=VALUES(`prop_desc`),`summary`=VALUES(`summary`),
+    `main_img`=VALUES(`main_img`),`images`=VALUES(`images`),
+    `phy_type`=VALUES(`phy_type`),`low_price`=VALUES(`low_price`),
+    `high_price`=VALUES(`high_price`),`low_market_price`=VALUES(`low_market_price`),
+    `high_market_price`=VALUES(`high_market_price`),`total_stock`=VALUES(`total_stock`),
+    `out_code`=VALUES(`out_code`),`commission_rate`=VALUES(`commission_rate`),
+    `modified`=VALUES(`modified`)
+  </insert>
+  
+  <select id="get" resultType="ItemPo" parameterType="java.lang.Long">
+    select
+    <include refid="COLUMNS"/>
+    from item where id = #{id}
+  </select>
+</mapper>

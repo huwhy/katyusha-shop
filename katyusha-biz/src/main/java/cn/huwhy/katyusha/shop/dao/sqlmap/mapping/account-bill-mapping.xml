@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.huwhy.katyusha.shop.dao.AccountBillDao">
+  <sql id="COLUMNS">
+    id,`member_id`,tid,oid,`type`,amount,sub_type,status,end_time,created
+  </sql>
+  
+  <insert id="save" useGeneratedKeys="true" keyProperty="id" keyColumn="id" parameterType="AccountBillPo">
+    insert into account_bill(
+    <include refid="COLUMNS"/>
+    )values(
+    #{id},#{memberId},#{tid},#{oid},#{type.value},#{amount},#{subType.value},#{status.value},#{endTime},#{created}
+    ) on duplicate key update
+    `status`=VALUES(`status`),`end_time`=VALUES(`end_time`)
+  </insert>
+  
+  <select id="get" resultType="AccountBillPo" parameterType="java.lang.Long">
+    select
+    <include refid="COLUMNS"/>
+    from account_bill where id = #{id}
+  </select>
+</mapper>

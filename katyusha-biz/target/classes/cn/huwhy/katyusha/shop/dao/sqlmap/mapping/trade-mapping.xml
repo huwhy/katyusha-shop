@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.huwhy.katyusha.shop.dao.TradeDao">
+  <sql id="COLUMNS">
+    id,`member_id`,total_amount,discount_amount,total_post_fee,
+    total_payment,status,pay_time,consign_time,express_name,
+    express_code,plan_receive_time,confirm_receive_time,
+    receive_person,receive_province,receive_city,receive_district,
+    receive_address,receive_phone,receive_zip,buyer_memo,card_no,
+    real_name,end_time,modified,created
+  </sql>
+  
+  <insert id="save" parameterType="TradePo">
+    insert into trade(
+    <include refid="COLUMNS"/>
+    )values(
+    #{id},#{memberId},#{totalAmount},#{discountAmount},#{totalPostFee},
+    #{totalPayment},#{status.value},#{payTime},#{consignTime},#{expressName},
+    #{expressCode},#{planReceiveTime},#{confirmReceiveTime},#{receivePerson},
+    #{receiveProvince},#{receiveCity},#{receiveDistrict},#{receiveAddress},
+    #{receivePhone},#{receiveZip},#{buyerMemo},#{cardNo},#{realName},
+    #{endTime},#{modified},#{created}
+    ) on duplicate key update
+    `status`=VALUES(`status`),`pay_time`=VALUES(`pay_time`),
+    `consign_time`=VALUES(`consign_time`),`express_name`=VALUES(`express_name`),
+    `express_code`=VALUES(`express_code`),`plan_receive_time`=VALUES(`plan_receive_time`),
+    `confirm_receive_time`=VALUES(`confirm_receive_time`),`end_time`=VALUES(`end_time`),
+    `modified`=VALUES(`modified`)
+  </insert>
+  
+  <select id="get" resultType="TradePo" parameterType="java.lang.Long">
+    select
+    <include refid="COLUMNS"/>
+    from trade where id = #{id}
+  </select>
+</mapper>

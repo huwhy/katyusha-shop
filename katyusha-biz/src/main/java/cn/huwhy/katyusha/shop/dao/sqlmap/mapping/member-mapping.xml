@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.huwhy.katyusha.shop.dao.MemberDao">
+  <sql id="COLUMNS">
+    id,`phone`,nick,head_img,label,real_name,id_card_no,
+    trade_num,exp,sex,birthday,last_login_time,created
+  </sql>
+  
+  <insert id="save" parameterType="MemberPo">
+    insert into member(
+    <include refid="COLUMNS"/>
+    )values(
+    #{id},#{phone},#{nick},#{headImg},#{label},#{realName},
+    #{idCardNo},#{tradeNum},#{exp},#{sex},#{birthday},#{lastLoginTime},#{created}
+    ) on duplicate key update
+    `nick`=VALUES(`nick`),`head_img`=VALUES(`head_img`),`label`=VALUES(`label`),
+    `sex`=VALUES(`sex`),`birthday`=VALUES(`birthday`)
+  </insert>
+  
+  <select id="get" resultType="MemberPo" parameterType="java.lang.Long">
+    select
+    <include refid="COLUMNS"/>
+    from member where id = #{id}
+  </select>
+</mapper>
