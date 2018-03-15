@@ -3,25 +3,24 @@ package cn.huwhy.katyusha.shop.dao.po;
 import java.io.Serializable;
 
 public class StockPo implements Serializable {
-    private long itemId;
-    private long skuId;
+    private long id;
     private int num;
     private int version;
 
-    public long getItemId() {
-        return itemId;
+    public StockPo() {
     }
 
-    public void setItemId(long itemId) {
-        this.itemId = itemId;
+    public StockPo(long id, int num) {
+        this.id = id;
+        this.num = num;
     }
 
-    public long getSkuId() {
-        return skuId;
+    public long getId() {
+        return id;
     }
 
-    public void setSkuId(long skuId) {
-        this.skuId = skuId;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public int getNum() {

@@ -16,12 +16,14 @@ public class ItemPo implements Serializable {
     private String images;
     private ItemPhyType phyType;
     private ItemStatus status;
+    private String content;
     private int saleNum;
     private int evalNum;
     private int lowPrice;
     private int highPrice;
     private int lowMarketPrice;
     private int highMarketPrice;
+    private String skuIds;
     private int  totalStock;
     private String outCode;
     private int commissionRate;
@@ -100,6 +102,14 @@ public class ItemPo implements Serializable {
         this.status = status;
     }
 
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
     public int getSaleNum() {
         return saleNum;
     }
@@ -146,6 +156,14 @@ public class ItemPo implements Serializable {
 
     public void setHighMarketPrice(int highMarketPrice) {
         this.highMarketPrice = highMarketPrice;
+    }
+
+    public String getSkuIds() {
+        return skuIds;
+    }
+
+    public void setSkuIds(String skuIds) {
+        this.skuIds = skuIds;
     }
 
     public int getTotalStock() {

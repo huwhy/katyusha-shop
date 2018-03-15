@@ -26,8 +26,9 @@ public class MvcConfig extends WebMvcConfigurationSupport {
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
         FastJsonHttpMessageConverter converter = new FastJsonHttpMessageConverter();
         converter.setSupportedMediaTypes(Arrays.asList(
-                new MediaType("application", "json", UTF8),
-                new MediaType("text", "xml", UTF8)));
+                new MediaType("application", "json", UTF8)
+//                new MediaType("text", "xml", UTF8))
+        ));
         converters.add(converter);
     }
 

@@ -15,9 +15,38 @@
     barcode=VALUES(barcode),img=VALUES(img)
   </insert>
   
+  <insert id="saves" parameterType="java.util.List">
+    insert into sku(
+    <include refid="COLUMNS"/>
+    )values
+    <foreach collection="list" item="item" index="index"
+             separator=",">
+      (
+      #{item.id},#{item.itemId},#{item.spec},#{item.marketPrice},#{item.deleted},#{item.barcode},#{item.img}
+      )
+    </foreach>
+    on duplicate key update
+    `spec`=VALUES(`spec`),market_price=VALUES(market_price),
+    barcode=VALUES(barcode),img=VALUES(img)
+  </insert>
+  
   <select id="get" resultType="SkuPo" parameterType="java.lang.Long">
     select
     <include refid="COLUMNS"/>
     from sku where id = #{id}
+  </select>
+  
+  <select id="getByIds" resultType="SkuPo" parameterType="java.util.Collection">
+    select
+    <include refid="COLUMNS"/>
+    from sku where id in (
+    <foreach collection="ids" item="id" index="index" separator=",">
+      #{ids[${index}]}
+    </foreach>
+    )
+  </select>
+  
+  <select id="nextId" resultType="Long">
+    select next_val('seq_sku')
   </select>
 </mapper>

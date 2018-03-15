@@ -14,9 +14,33 @@
     `num`=VALUES(`num`),version=VALUES(version)
   </insert>
   
+  <insert id="saves" parameterType="java.util.List">
+    insert into stock(
+    <include refid="COLUMNS"/>
+    )values
+    <foreach collection="list" item="item" index="index"
+             separator=",">
+      (
+      #{item.id},#{item.num},#{item.version}
+      )
+    </foreach>
+    on duplicate key update
+    `num`=VALUES(`num`),version=VALUES(version)
+  </insert>
+  
   <select id="get" resultType="StockPo" parameterType="java.lang.Long">
     select
     <include refid="COLUMNS"/>
     from stock where id = #{id}
+  </select>
+  
+  <select id="getByIds" resultType="StockPo" parameterType="java.util.Collection">
+    select
+    <include refid="COLUMNS"/>
+    from stock where id in (
+    <foreach collection="ids" item="id" index="index" separator=",">
+      #{ids[${index}]}
+    </foreach>
+    )
   </select>
 </mapper>

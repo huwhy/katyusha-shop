@@ -1,10 +1,14 @@
 package cn.huwhy.katyusha.shop.biz.mgr;
 
+import cn.huwhy.interfaces.Paging;
 import cn.huwhy.katyusha.shop.dao.CategoryDao;
 import cn.huwhy.katyusha.shop.dao.po.CategoryPo;
 import cn.huwhy.katyusha.shop.model.Category;
+import cn.huwhy.katyusha.shop.model.CategoryTerm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 import static cn.huwhy.common.util.BeanCopyUtils.copyProperties;
 
@@ -23,5 +27,10 @@ public class CategoryManager {
     public Category get(int id) {
         CategoryPo po = categoryDao.get(id);
         return copyProperties(po, Category.class);
+    }
+
+    public Paging<Category> findCategories(CategoryTerm term) {
+        List<CategoryPo> list = categoryDao.findPaging(term);
+        return new Paging<>(term, copyProperties(list, Category.class));
     }
 }

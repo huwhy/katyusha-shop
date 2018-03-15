@@ -18,7 +18,10 @@ server:
       prefix: access_log
       suffix: .log
 
-common:
-  version: 1.0
+spring:
+  http:
+    multipart:
+      max-file-size: 2MB
+      max-request-size: 2MB
 
 
