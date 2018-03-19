@@ -11,6 +11,7 @@ import cn.huwhy.katyusha.shop.model.ItemTerm;
 import cn.huwhy.katyusha.shop.model.Sku;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,7 @@ public class ItemBiz {
     @Autowired
     private StockManager stockManager;
 
+    @Transactional
     public void save(Item item) {
         if (item.getId() == 0) {
             item.setId(itemManager.nextId());
@@ -33,6 +35,8 @@ public class ItemBiz {
         List<StockPo> stockList = new ArrayList<>(item.getSkuList().size());
         int lowPrice = Integer.MAX_VALUE,
                 highPrice = Integer.MIN_VALUE,
+                lowMarketPrice = Integer.MAX_VALUE,
+                highMarketPrice = Integer.MIN_VALUE,
                 totalStock = 0;
         for (Sku sku : item.getSkuList()) {
             if (sku.getId() == 0) {
@@ -47,11 +51,22 @@ public class ItemBiz {
             if (highPrice < sku.getPrice()) {
                 highPrice = sku.getPrice();
             }
+            if (highMarketPrice < sku.getMarketPrice()) {
+                highMarketPrice = sku.getMarketPrice();
+            }
+            if (lowMarketPrice > sku.getMarketPrice()) {
+                lowMarketPrice = sku.getMarketPrice();
+            }
+            if (highPrice < sku.getPrice()) {
+                highPrice = sku.getPrice();
+            }
             totalStock += sku.getStock();
         }
         item.setSkuIds(skuIds);
         item.setLowPrice(lowPrice);
         item.setHighPrice(highPrice);
+        item.setHighMarketPrice(highMarketPrice);
+        item.setLowMarketPrice(lowMarketPrice);
         item.setTotalStock(totalStock);
         itemManager.save(item);
         skuManager.save(item.getSkuList());

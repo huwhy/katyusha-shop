@@ -5,7 +5,7 @@
     id,`member_id`,item_id,sku_id,num,modified,created
   </sql>
   
-  <insert id="save" parameterType="OrderPo">
+  <insert id="save" useGeneratedKeys="true" keyColumn="id" keyProperty="id" parameterType="ShoppingCartPo">
     insert into shopping_cart(
     <include refid="COLUMNS"/>
     )values(
@@ -14,9 +14,23 @@
     `num`=VALUES(`num`),modified=VALUES(modified)
   </insert>
   
-  <select id="get" resultType="OrderPo" parameterType="java.lang.Long">
+  <update id="updateNum">
+    update shopping_cart set num=#{num} where id=#{id}
+  </update>
+  
+  <select id="get" resultType="ShoppingCartPo" parameterType="java.lang.Long">
     select
     <include refid="COLUMNS"/>
     from shopping_cart where id = #{id}
+  </select>
+  
+  <select id="getByMemberId" resultType="ShoppingCartPo" parameterType="java.lang.Long">
+    select
+    <include refid="COLUMNS"/>
+    from shopping_cart where member_id = #{memberId}
+  </select>
+  
+  <select id="nextId" resultType="Long">
+    select next_val('seq_cart')
   </select>
 </mapper>

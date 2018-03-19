@@ -33,4 +33,9 @@ public class CategoryManager {
         List<CategoryPo> list = categoryDao.findPaging(term);
         return new Paging<>(term, copyProperties(list, Category.class));
     }
+
+    public List<Category> listCategories(CategoryTerm term) {
+        List<CategoryPo> list = categoryDao.findByTerm(term);
+        return copyProperties(list, Category.class);
+    }
 }

@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import static cn.huwhy.common.util.BeanCopyUtils.copyProperties;
@@ -52,6 +54,16 @@ public class ItemManager {
             items.add(toItem(po));
         }
         return new Paging<>(term, items);
+    }
+
+    public List<Item> listByIds(Collection<Long> ids) {
+        if (ids.isEmpty()) return Collections.emptyList();
+        List<ItemPo> pos = itemDao.listByIds(ids);
+        List<Item> items = new ArrayList<>(pos.size());
+        for (ItemPo po : pos) {
+            items.add(toItem(po));
+        }
+        return items;
     }
 
     private Item toItem(ItemPo po) {

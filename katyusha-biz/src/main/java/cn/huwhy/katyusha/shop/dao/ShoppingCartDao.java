@@ -2,6 +2,14 @@ package cn.huwhy.katyusha.shop.dao;
 
 import cn.huwhy.ibatis.BaseDao;
 import cn.huwhy.katyusha.shop.dao.po.ShoppingCartPo;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface ShoppingCartDao extends BaseDao<ShoppingCartPo, Long> {
+
+    List<ShoppingCartPo> getByMemberId(@Param("memberId") long memberId);
+
+    void updateNum(@Param("id") long id, @Param("num") int num);
+
 }

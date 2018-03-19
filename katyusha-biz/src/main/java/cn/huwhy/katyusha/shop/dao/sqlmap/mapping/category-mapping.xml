@@ -27,6 +27,19 @@
     </where>
   </select>
   
+  <select id="findByTerm" resultType="CategoryPo" parameterType="cn.huwhy.interfaces.Term">
+    select <include refid="COLUMNS" />
+    from category
+    <where>
+      <if test="id > 0">
+        and id = #{id}
+      </if>
+      <if test="name != null and name != ''">
+        and `name` like #{name}
+      </if>
+    </where>
+  </select>
+  
   <select id="get" resultType="CategoryPo" parameterType="java.lang.Integer">
     select
     <include refid="COLUMNS"/>

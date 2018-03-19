@@ -42,6 +42,15 @@
     <include refid="COLUMNS"/>
     from item where id = #{id}
   </select>
+  <select id="listByIds" resultType="ItemPo" parameterType="java.util.Collection">
+    select
+    <include refid="COLUMNS"/>
+    from item where id in (
+    <foreach collection="ids" item="id" index="index" separator=",">
+      #{ids[${index}]}
+    </foreach>
+    )
+  </select>
   
   <select id="getContent" resultType="java.lang.String" parameterType="java.lang.Long">
     select content from item_content where id=#{id}
