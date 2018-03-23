@@ -17,7 +17,6 @@ public class MemberManager {
 
     public void save(Member member) {
         MemberPo po = copyProperties(member, MemberPo.class);
-        po.setLastLoginTime(new Date());
         po.setCreated(new Date());
         if (po.getId() == 0) {
             po.setId(memberDao.nextId());

@@ -1,5 +1,12 @@
 package cn.huwhy.katyusha.shop;
 
+import cn.huwhy.katyusha.shop.mp.TextMsgListener;
+import cn.huwhy.wx.sdk.aes.AesException;
+import cn.huwhy.wx.sdk.aes.WXBizMsgCrypt;
+import cn.huwhy.wx.sdk.listener.EventHandler;
+import cn.huwhy.wx.sdk.message.Message;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
