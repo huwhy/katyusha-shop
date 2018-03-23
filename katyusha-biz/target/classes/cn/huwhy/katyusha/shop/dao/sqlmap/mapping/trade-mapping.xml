@@ -7,7 +7,7 @@
     express_code,plan_receive_time,confirm_receive_time,
     receive_person,receive_province,receive_city,receive_district,
     receive_address,receive_phone,receive_zip,buyer_memo,card_no,
-    real_name,end_time,modified,created
+    real_name,order_ids,end_time,modified,created
   </sql>
   
   <insert id="save" parameterType="TradePo">
@@ -19,7 +19,7 @@
     #{expressCode},#{planReceiveTime},#{confirmReceiveTime},#{receivePerson},
     #{receiveProvince},#{receiveCity},#{receiveDistrict},#{receiveAddress},
     #{receivePhone},#{receiveZip},#{buyerMemo},#{cardNo},#{realName},
-    #{endTime},#{modified},#{created}
+    #{orderIds},#{endTime},#{modified},#{created}
     ) on duplicate key update
     `status`=VALUES(`status`),`pay_time`=VALUES(`pay_time`),
     `consign_time`=VALUES(`consign_time`),`express_name`=VALUES(`express_name`),
@@ -32,5 +32,9 @@
     select
     <include refid="COLUMNS"/>
     from trade where id = #{id}
+  </select>
+  
+  <select id="nextId" resultType="Long">
+    select next_val('seq_trade')
   </select>
 </mapper>

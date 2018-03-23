@@ -22,4 +22,8 @@
     <include refid="COLUMNS"/>
     from member where id = #{id}
   </select>
+  
+  <select id="nextId" resultType="Long">
+    select next_val('seq_member')
+  </select>
 </mapper>

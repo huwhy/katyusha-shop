@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -25,8 +26,8 @@ public class ShoppingCartBiz {
     @Autowired
     private SkuManager skuManager;
 
-    public List<ShoppingCart> getShoppingCarts(long memberId) {
-        List<ShoppingCart> list = shoppingCartManager.getShoppingCarts(memberId);
+    public List<ShoppingCart> getShoppingCarts(long memberId, Collection<Long> ids) {
+        List<ShoppingCart> list = shoppingCartManager.getShoppingCarts(memberId, ids);
         List<Long> itemIds = new ArrayList<>(list.size());
         List<Long> skuIds = new ArrayList<>(list.size());
         for (ShoppingCart cart : list) {
@@ -58,7 +59,7 @@ public class ShoppingCartBiz {
         return cart;
     }
 
-    public void updateNum(long id, int num) {
-        shoppingCartManager.updateNum(id, num);
+    public void updateNum(long id, int num, long memberId) {
+        shoppingCartManager.updateNum(id, num, memberId);
     }
 }

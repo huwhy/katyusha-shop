@@ -15,7 +15,7 @@
   </insert>
   
   <update id="updateNum">
-    update shopping_cart set num=#{num} where id=#{id}
+    update shopping_cart set num=#{num} where id=#{id} and member_id=#{memberId}
   </update>
   
   <select id="get" resultType="ShoppingCartPo" parameterType="java.lang.Long">
@@ -24,10 +24,19 @@
     from shopping_cart where id = #{id}
   </select>
   
-  <select id="getByMemberId" resultType="ShoppingCartPo" parameterType="java.lang.Long">
+  <select id="getByMemberId" resultType="ShoppingCartPo">
     select
     <include refid="COLUMNS"/>
     from shopping_cart where member_id = #{memberId}
+    <if test="ids != null and ids.size() > 0">
+      and id in (
+      <foreach collection="ids" item="id" index="index" separator=",">
+        #{ids[${index}]}
+      </foreach>
+      )
+    </if>
+    and deleted = 0
+    
   </select>
   
   <select id="nextId" resultType="Long">

@@ -4,7 +4,7 @@
   <sql id="COLUMNS">
     id,`tid`,item_id,title,sku_id,spec,barcode,
     num,price,post_fee,total_amount,payment,status,
-    refund_status,evaluate,commission_rate,modified,
+    refund_status,evaluate,commission_fee,modified,
     end_time,created
   </sql>
   
@@ -12,11 +12,30 @@
     insert into orders(
     <include refid="COLUMNS"/>
     )values(
-    #{id},#{itemId},#{title},#{skuId},#{spec},#{barcode},
+    #{id},#{tid},#{itemId},#{title},#{skuId},#{spec},#{barcode},
     #{num},#{price},#{postFee},#{totalAmount},#{payment},
     #{status.value},#{refundStatus.value},#{evaluate},
-    #{commissionRate},#{modified},#{endTime},#{created}
+    #{commissionFee},#{modified},#{endTime},#{created}
     ) on duplicate key update
+    `status`=VALUES(`status`),`refund_status`=VALUES(`refund_status`),
+    `evaluate`=VALUES(`evaluate`),`modified`=VALUES(`modified`),
+    `end_time`=VALUES(`end_time`)
+  </insert>
+  
+  <insert id="saves" parameterType="java.util.List">
+    insert into orders(
+    <include refid="COLUMNS"/>
+    )values
+    <foreach collection="list" item="item" index="index"
+             separator=",">
+      (
+      #{item.id},#{item.tid},#{item.itemId},#{item.title},#{item.skuId},#{item.spec},#{item.barcode},
+      #{item.num},#{item.price},#{item.postFee},#{item.totalAmount},#{item.payment},
+      #{item.status.value},#{item.refundStatus.value},#{item.evaluate},
+      #{item.commissionFee},#{item.modified},#{item.endTime},#{item.created}
+      )
+    </foreach>
+    on duplicate key update
     `status`=VALUES(`status`),`refund_status`=VALUES(`refund_status`),
     `evaluate`=VALUES(`evaluate`),`modified`=VALUES(`modified`),
     `end_time`=VALUES(`end_time`)
@@ -26,5 +45,19 @@
     select
     <include refid="COLUMNS"/>
     from orders where id = #{id}
+  </select>
+  
+  <select id="getByIds" resultType="OrderPo" parameterType="java.util.Collection">
+    select
+    <include refid="COLUMNS"/>
+    from orders where id in (
+    <foreach collection="ids" item="id" index="index" separator=",">
+      #{ids[${index}]}
+    </foreach>
+    )
+  </select>
+  
+  <select id="nextId" resultType="Long">
+    select next_val('seq_order')
   </select>
 </mapper>

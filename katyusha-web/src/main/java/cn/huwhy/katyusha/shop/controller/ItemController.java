@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/item")
-public class ItemController {
+public class ItemController extends BaseController {
 
     @Autowired
     private ItemBiz itemBiz;

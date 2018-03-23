@@ -1,10 +1,11 @@
-package cn.huwhy.katyusha.shop.dao.po;
+package cn.huwhy.katyusha.shop.model;
 
-import cn.huwhy.katyusha.shop.model.TradeStatus;
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
-public class TradePo implements Serializable {
+public class Trade implements Serializable {
     private long id;
     private long memberId;
     private int totalAmount;
@@ -17,7 +18,6 @@ public class TradePo implements Serializable {
     private String expressName;
     private String expressCode;
     private Date planReceiveTime;
-    private Date confirmReceiveTime;
     private String receivePerson;
     private String receiveProvince;
     private String receiveCity;
@@ -28,7 +28,7 @@ public class TradePo implements Serializable {
     private String buyerMemo;
     private String cardNo;
     private String realName;
-    private String orderIds;
+    private Collection<Long> orderIds;
     private Date endTime;
     private Date modified;
     private Date created;
@@ -129,14 +129,6 @@ public class TradePo implements Serializable {
         this.planReceiveTime = planReceiveTime;
     }
 
-    public Date getConfirmReceiveTime() {
-        return confirmReceiveTime;
-    }
-
-    public void setConfirmReceiveTime(Date confirmReceiveTime) {
-        this.confirmReceiveTime = confirmReceiveTime;
-    }
-
     public String getReceivePerson() {
         return receivePerson;
     }
@@ -217,11 +209,11 @@ public class TradePo implements Serializable {
         this.realName = realName;
     }
 
-    public String getOrderIds() {
+    public Collection<Long> getOrderIds() {
         return orderIds;
     }
 
-    public void setOrderIds(String orderIds) {
+    public void setOrderIds(Collection<Long> orderIds) {
         this.orderIds = orderIds;
     }
 
@@ -247,5 +239,24 @@ public class TradePo implements Serializable {
 
     public void setCreated(Date created) {
         this.created = created;
+    }
+
+    private List<Long> cartIds;
+    private List<Order> orders;
+
+    public List<Long> getCartIds() {
+        return cartIds;
+    }
+
+    public void setCartIds(List<Long> cartIds) {
+        this.cartIds = cartIds;
+    }
+
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
     }
 }

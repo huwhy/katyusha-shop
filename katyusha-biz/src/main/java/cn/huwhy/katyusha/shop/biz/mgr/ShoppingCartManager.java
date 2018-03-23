@@ -6,6 +6,8 @@ import cn.huwhy.katyusha.shop.model.ShoppingCart;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -17,8 +19,8 @@ public class ShoppingCartManager {
     @Autowired
     private ShoppingCartDao shoppingCartDao;
 
-    public List<ShoppingCart> getShoppingCarts(long memberId) {
-        List<ShoppingCartPo> list = shoppingCartDao.getByMemberId(memberId);
+    public List<ShoppingCart> getShoppingCarts(long memberId, Collection<Long> ids) {
+        List<ShoppingCartPo> list = shoppingCartDao.getByMemberId(memberId, ids);
         return copyProperties(list, ShoppingCart.class);
     }
 
@@ -30,7 +32,7 @@ public class ShoppingCartManager {
         cart.setId(po.getId());
     }
 
-    public void updateNum(long id, int num) {
-        shoppingCartDao.updateNum(id, num);
+    public void updateNum(long id, int num, long memberId) {
+        shoppingCartDao.updateNum(id, num, memberId);
     }
 }

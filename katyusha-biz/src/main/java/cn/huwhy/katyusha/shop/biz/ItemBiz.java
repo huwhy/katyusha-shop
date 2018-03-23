@@ -87,6 +87,10 @@ public class ItemBiz {
         return item;
     }
 
+    public Sku getSku(long id) {
+        return skuManager.get(id);
+    }
+
     public Paging<Item> findItems(ItemTerm term) {
         return itemManager.findItems(term);
     }
