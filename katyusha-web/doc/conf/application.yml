@@ -1,0 +1,24 @@
+server:
+  port: 8888
+  connection-timeout:
+  session:
+    timeout: 3600
+  compression:
+    enabled: true
+    mime-types: text/html,text/css,application/json
+    min-response-size: 2048
+  tomcat:
+    max-threads: 1000
+    uri-encoding: UTF-8
+    remote-ip-header: x-forwarded-for
+    accesslog:
+      directory: ${log.path}
+      pattern: common
+      enabled: true
+      prefix: access_log
+      suffix: .log
+
+common:
+  version: 1.0
+
+

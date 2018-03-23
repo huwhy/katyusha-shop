@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <Properties>
+    <Property name="log-path">${sys:log.path}</Property>
+  </Properties>
+  <appenders>
+    <RollingFile name="app_debug" fileName="${log-path}/debug.log"
+                 filePattern="${log-path}/debug-%d{yyyyMMddHHmm}-%i.log.gz">
+      <Filters>
+        <ThresholdFilter level="info" onMatch="DENY" onMismatch="NEUTRAL"/>
+        <ThresholdFilter level="debug" onMatch="ACCEPT" onMismatch="DENY"/>
+      </Filters>
+      <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} %-5level - %msg%xEx%n"/>
+      <Policies>
+        <TimeBasedTriggeringPolicy modulate="true" interval="24"/>
+        <SizeBasedTriggeringPolicy size="10 MB"/>
+      </Policies>
+      <DefaultRolloverStrategy max="30"/>
+    </RollingFile>
+    
+    <RollingFile name="app_info" fileName="${log-path}/info.log"
+                 filePattern="${log-path}/info-%d{yyyyMMddHHmm}-%i.log.gz">
+      <Filters>
+        <ThresholdFilter level="warn" onMatch="DENY" onMismatch="NEUTRAL"/>
+        <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
+      </Filters>
+      <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} %-5level - %msg%xEx%n"/>
+      <Policies>
+        <TimeBasedTriggeringPolicy modulate="true" interval="24"/>
+        <SizeBasedTriggeringPolicy size="10 MB"/>
+      </Policies>
+      <DefaultRolloverStrategy max="60"/>
+    </RollingFile>
+    
+    <RollingFile name="app_error" fileName="${log-path}/error.log"
+                 filePattern="${log-path}/error-%d{yyyyMMddHHmm}-%i.log.gz">
+      <Filters>
+        <ThresholdFilter level="warn" onMatch="ACCEPT" onMismatch="DENY"/>
+      </Filters>
+      <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} %-5level - %msg%xEx%n"/>
+      <Policies>
+        <TimeBasedTriggeringPolicy modulate="true" interval="24"/>
+        <SizeBasedTriggeringPolicy size="10 MB"/>
+      </Policies>
+      <DefaultRolloverStrategy max="10"/>
+    </RollingFile>
+  </appenders>
+  
+  <loggers>
+    <root level="debug">
+      <appender-ref ref="app_debug"/>
+      <appender-ref ref="app_info"/>
+      <appender-ref ref="app_error"/>
+    </root>
+  </loggers>
+</configuration>
