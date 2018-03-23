@@ -20,7 +20,7 @@ public class MemberBiz {
     private AccountManager accountManager;
 
     @Transactional
-    public void addByMp(MpUser mpUser) {
+    public void saveForMp(MpUser mpUser) {
         MpUser mp = mpUserManager.get(mpUser.getOpenId());
         Member member = null;
         if (mp != null) {
@@ -32,9 +32,13 @@ public class MemberBiz {
         member.setNick(mpUser.getNickname());
         member.setHeadImg(mpUser.getHeadImgUrl());
         memberManager.save(member);
-        Account account = new Account();
-        account.setId(member.getId());
-        accountManager.save(account);
+        mpUser.setMemberId(member.getId());
+        mpUserManager.save(mpUser);
+        if (mp == null) {
+            Account account = new Account();
+            account.setId(member.getId());
+            accountManager.save(account);
+        }
     }
 
     @Transactional
@@ -47,6 +51,10 @@ public class MemberBiz {
 
     public Member get(long id) {
         return memberManager.get(id);
+    }
+
+    public MpUser getMpUser(String openId) {
+        return mpUserManager.get(openId);
     }
 
     public Account getAccount(long id) {
