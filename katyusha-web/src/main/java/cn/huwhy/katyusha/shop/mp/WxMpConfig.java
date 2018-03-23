@@ -35,10 +35,10 @@ public class WxMpConfig {
                              @Value("${mp.secret}") String secret,
                              @Value("${mp.token}") String token,
                              @Value("${mp.aesKey}") String aesKey,
-                             @Value("${mp.partnerId}") String partnerId,
-                             @Value("${mp.partnerKey}") String partnerKey,
-                             @Value("${mp.certPath}") String certPath,
-                             @Value("${mp.certPassword}") String certPassword) {
+                             @Value("${mp.partnerId:}") String partnerId,
+                             @Value("${mp.partnerKey:}") String partnerKey,
+                             @Value("${mp.certPath:}") String certPath,
+                             @Value("${mp.certPassword:}") String certPassword) {
         MpConfig config = new MpConfig();
         config.setAppId(appId);
         config.setSecret(secret);
