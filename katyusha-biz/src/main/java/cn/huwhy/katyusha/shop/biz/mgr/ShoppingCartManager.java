@@ -35,4 +35,8 @@ public class ShoppingCartManager {
     public void updateNum(long id, int num, long memberId) {
         shoppingCartDao.updateNum(id, num, memberId);
     }
+
+    public void deleteByIds(Collection<Long> ids) {
+        shoppingCartDao.delByIds(ids);
+    }
 }

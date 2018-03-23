@@ -36,8 +36,17 @@
       )
     </if>
     and deleted = 0
-    
+  
   </select>
+  
+  <update id="delByIds">
+    update shopping_cart set deleted = 1 where id in
+    (
+    <foreach collection="ids" item="id" index="index" separator=",">
+      #{ids[${index}]}
+    </foreach>
+    )
+  </update>
   
   <select id="nextId" resultType="Long">
     select next_val('seq_cart')

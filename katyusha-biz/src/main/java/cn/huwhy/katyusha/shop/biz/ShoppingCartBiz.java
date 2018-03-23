@@ -59,6 +59,10 @@ public class ShoppingCartBiz {
         return cart;
     }
 
+    public void deleteByIds(Collection<Long> ids) {
+        shoppingCartManager.deleteByIds(ids);
+    }
+
     public void updateNum(long id, int num, long memberId) {
         shoppingCartManager.updateNum(id, num, memberId);
     }

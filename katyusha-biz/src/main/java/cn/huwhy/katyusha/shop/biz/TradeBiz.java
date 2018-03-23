@@ -63,6 +63,7 @@ public class TradeBiz {
         trade.setStatus(TradeStatus.CREATED);
         orderManager.save(orders);
         tradeManager.save(trade);
+        shoppingCartBiz.deleteByIds(trade.getCartIds());
     }
 
     public Trade get(long id) {

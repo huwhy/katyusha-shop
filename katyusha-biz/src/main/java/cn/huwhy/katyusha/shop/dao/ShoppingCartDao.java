@@ -13,4 +13,5 @@ public interface ShoppingCartDao extends BaseDao<ShoppingCartPo, Long> {
 
     void updateNum(@Param("id") long id, @Param("num") int num, @Param("memberId") long memberId);
 
+    void delByIds(@Param("ids") Collection<Long> ids);
 }
