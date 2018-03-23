@@ -37,7 +37,7 @@ public class MpConfigUtil {
         if (mpConfig.isJsapiTicketExpired()) {
             synchronized (jsapiTicketLock) {
                 if (mpConfig.isJsapiTicketExpired()) {
-                    JsTicket jsTicket = JsApiTicketApi.getTicked(mpConfig.getAccessToken());
+                    JsTicket jsTicket = JsApiTicketApi.getTicked(getAccessToken());
                     mpConfig.updateJsapiTicket(jsTicket.getTicket(), jsTicket.getExpiresIn());
                 }
             }
