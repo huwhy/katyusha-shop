@@ -3,6 +3,7 @@ package cn.huwhy.katyusha.shop.biz.mgr;
 import cn.huwhy.katyusha.shop.dao.TradeDao;
 import cn.huwhy.katyusha.shop.dao.po.TradePo;
 import cn.huwhy.katyusha.shop.model.Trade;
+import cn.huwhy.katyusha.shop.model.TradeStatus;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,5 +41,13 @@ public class TradeManager {
 
     public long nextId() {
         return tradeDao.nextId();
+    }
+
+    public void prepay(long id) {
+        tradeDao.setStatus(id, TradeStatus.WAIT_PAY);
+    }
+
+    public void paid(long id) {
+        tradeDao.setStatus(id, TradeStatus.WAIT_DELIVER_GOODS);
     }
 }

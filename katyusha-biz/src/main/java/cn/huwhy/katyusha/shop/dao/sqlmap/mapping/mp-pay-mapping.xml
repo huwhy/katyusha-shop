@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.huwhy.katyusha.shop.dao.MpPayDao">
+  <sql id="COLUMNS">
+    tid,prepay_id,transaction_id
+  </sql>
+  
+  <insert id="save" parameterType="MpPayPo">
+    insert into mp_pay(
+    <include refid="COLUMNS"/>
+    )values(
+    #{tid},#{prepayId},#{transactionId}
+    ) on duplicate key update
+    `prepay_id`=VALUES(`prepay_id`),transaction_id=VALUES(transaction_id)
+  </insert>
+  
+  <select id="get" resultType="MpPayPo" parameterType="java.lang.Long">
+    select
+    <include refid="COLUMNS"/>
+    from mp_pay where tid = #{id}
+  </select>
+  
+</mapper>

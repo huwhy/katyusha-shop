@@ -21,7 +21,7 @@ import java.io.PrintWriter;
 import java.security.NoSuchAlgorithmException;
 
 @Controller
-@RequestMapping("/api/mp")
+@RequestMapping("/wechat/mp")
 public class MpEndpointController {
 
     private Logger logger = LoggerFactory.getLogger(getClass());

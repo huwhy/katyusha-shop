@@ -1,5 +1,6 @@
 package cn.huwhy.katyusha.shop.biz;
 
+import cn.huwhy.katyusha.shop.biz.mgr.MpPayManager;
 import cn.huwhy.katyusha.shop.biz.mgr.OrderManager;
 import cn.huwhy.katyusha.shop.biz.mgr.TradeManager;
 import cn.huwhy.katyusha.shop.model.Order;
@@ -25,6 +26,8 @@ public class TradeBiz {
     private TradeManager tradeManager;
     @Autowired
     private OrderManager orderManager;
+    @Autowired
+    private MpPayManager mpPayManager;
 
     @Transactional
     public void add(Trade trade) {
@@ -72,4 +75,23 @@ public class TradeBiz {
         return trade;
     }
 
+    @Transactional
+    public void prepay(long id, String prepayId) {
+        Trade trade = get(id);
+        if (TradeStatus.CREATED.equals(trade.getStatus())) {
+            tradeManager.prepay(id);
+            orderManager.prepay(trade.getOrderIds());
+            mpPayManager.prepay(id, prepayId);
+        }
+    }
+
+    @Transactional
+    public void paid(long id, String transactionId) {
+        Trade trade = get(id);
+        if (TradeStatus.WAIT_PAY.equals(trade.getStatus())) {
+            tradeManager.paid(id);
+            orderManager.paid(trade.getOrderIds());
+            mpPayManager.paid(id, transactionId);
+        }
+    }
 }

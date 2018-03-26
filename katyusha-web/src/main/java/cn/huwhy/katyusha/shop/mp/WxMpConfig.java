@@ -4,10 +4,12 @@ import cn.huwhy.wx.sdk.aes.AesException;
 import cn.huwhy.wx.sdk.aes.MpConfig;
 import cn.huwhy.wx.sdk.aes.WXBizMsgCrypt;
 import cn.huwhy.wx.sdk.api.HttpClientUtil;
+import cn.huwhy.wx.sdk.api.WXPayApi;
 import cn.huwhy.wx.sdk.listener.EventHandler;
 import cn.huwhy.wx.sdk.message.Message;
 import com.google.common.base.Strings;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.ssl.SSLContexts;
@@ -38,7 +40,8 @@ public class WxMpConfig {
                              @Value("${mp.partnerId:}") String partnerId,
                              @Value("${mp.partnerKey:}") String partnerKey,
                              @Value("${mp.certPath:}") String certPath,
-                             @Value("${mp.certPassword:}") String certPassword) {
+                             @Value("${mp.certPassword:}") String certPassword,
+                             @Value("${mp.notifyUrl:}") String notifyUrl) {
         MpConfig config = new MpConfig();
         config.setAppId(appId);
         config.setSecret(secret);
@@ -46,6 +49,7 @@ public class WxMpConfig {
         config.setAesKey(aesKey);
         config.setPartnerId(partnerId);
         config.setPartnerKey(partnerKey);
+        config.setNotifyUrl(notifyUrl);
         if (!Strings.isNullOrEmpty(certPath) && !Strings.isNullOrEmpty(certPassword)) {
             FileInputStream fileInputStream = null;
             try {
@@ -75,7 +79,9 @@ public class WxMpConfig {
                         SSLConnectionSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER);
                 builder.setSSLSocketFactory(sslsf);
             }
-            HttpClientUtil.setHttpClient(builder.build());
+            CloseableHttpClient httpClient = builder.build();
+            HttpClientUtil.setHttpClient(httpClient);
+            WXPayApi.setHttpClient(httpClient);
         }
         return config;
     }

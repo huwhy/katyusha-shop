@@ -22,4 +22,9 @@ public class MpUserManager {
         MpUserPo po = mpUserDao.get(openId);
         return copyProperties(po, MpUser.class);
     }
+
+    public MpUser getByMemberId(long memberId) {
+        MpUserPo po = mpUserDao.getByMemberId(memberId);
+        return copyProperties(po, MpUser.class);
+    }
 }

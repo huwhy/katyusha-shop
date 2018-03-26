@@ -23,7 +23,8 @@ public class MemberController extends BaseController {
 
     @RequestMapping(value = "login", method = GET)
     public Json login(HttpServletRequest request) {
-        setMember(request, memberBiz.get(1000));
+        long memberId = getMemberId(request);
+        setMember(request, memberBiz.get(memberId), memberBiz.getMpUser(memberId));
         return Json.SUCCESS();
     }
 }

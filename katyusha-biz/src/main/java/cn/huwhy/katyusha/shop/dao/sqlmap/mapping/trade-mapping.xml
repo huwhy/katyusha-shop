@@ -34,6 +34,10 @@
     from trade where id = #{id}
   </select>
   
+  <update id="setStatus">
+    update trade set status=#{status.value} where id=#{id}
+  </update>
+  
   <select id="nextId" resultType="Long">
     select next_val('seq_trade')
   </select>

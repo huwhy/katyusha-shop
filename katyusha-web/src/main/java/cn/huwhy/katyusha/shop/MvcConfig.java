@@ -1,15 +1,19 @@
 package cn.huwhy.katyusha.shop;
 
+import cn.huwhy.katyusha.shop.interceptor.OAuthInterceptor;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import org.beetl.core.resource.ClasspathResourceLoader;
 import org.beetl.ext.spring.BeetlGroupUtilConfiguration;
 import org.beetl.ext.spring.BeetlSpringViewResolver;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistration;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
@@ -20,7 +24,6 @@ import java.util.List;
 @Configuration
 public class MvcConfig extends WebMvcConfigurationSupport {
     final static Charset UTF8 = Charset.forName("UTF-8");
-
 
     @Override
     public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
@@ -34,6 +37,17 @@ public class MvcConfig extends WebMvcConfigurationSupport {
                 new MediaType("application", "json", UTF8),
                 new MediaType("text", "xml", UTF8)));
         converters.add(converter);
+    }
+
+    @Autowired
+    private OAuthInterceptor oAuthInterceptor;
+
+    @Override
+    protected void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(oAuthInterceptor)
+                .addPathPatterns("/**")
+                .excludePathPatterns("/api/oauth.html", "/api/oauth_base.html", "/api/mp/endpoint");
+        super.addInterceptors(registry);
     }
 
     @Override

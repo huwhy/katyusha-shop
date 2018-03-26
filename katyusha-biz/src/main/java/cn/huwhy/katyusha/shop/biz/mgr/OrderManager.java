@@ -3,6 +3,7 @@ package cn.huwhy.katyusha.shop.biz.mgr;
 import cn.huwhy.katyusha.shop.dao.OrderDao;
 import cn.huwhy.katyusha.shop.dao.po.OrderPo;
 import cn.huwhy.katyusha.shop.model.Order;
+import cn.huwhy.katyusha.shop.model.TradeStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,5 +29,13 @@ public class OrderManager {
 
     public long nextId() {
         return orderDao.nextId();
+    }
+
+    public void prepay(Collection<Long> ids) {
+        orderDao.setStatus(ids, TradeStatus.WAIT_PAY);
+    }
+
+    public void paid(Collection<Long> ids) {
+        orderDao.setStatus(ids, TradeStatus.WAIT_DELIVER_GOODS);
     }
 }

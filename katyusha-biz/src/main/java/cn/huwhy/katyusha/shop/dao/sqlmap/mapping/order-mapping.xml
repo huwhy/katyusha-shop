@@ -57,6 +57,14 @@
     )
   </select>
   
+  <update id="setStatus">
+    update orders set status=#{status.value} where id in (
+    <foreach collection="ids" item="id" index="index" separator=",">
+      #{ids[${index}]}
+    </foreach>
+    )
+  </update>
+  
   <select id="nextId" resultType="Long">
     select next_val('seq_order')
   </select>

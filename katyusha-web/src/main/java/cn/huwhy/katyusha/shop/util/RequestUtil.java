@@ -31,4 +31,8 @@ public class RequestUtil {
         return request.getHeader("referer");
     }
 
+    public static String getRemoteIp(HttpServletRequest request) {
+        return request.getHeader("remote-ip");
+    }
+
 }

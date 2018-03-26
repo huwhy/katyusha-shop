@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
+
 @Service
 public class MemberBiz {
     @Autowired
@@ -20,7 +22,7 @@ public class MemberBiz {
     private AccountManager accountManager;
 
     @Transactional
-    public void saveForMp(MpUser mpUser) {
+    public Member saveForMp(MpUser mpUser) {
         MpUser mp = mpUserManager.get(mpUser.getOpenId());
         Member member = null;
         if (mp != null) {
@@ -31,6 +33,7 @@ public class MemberBiz {
         }
         member.setNick(mpUser.getNickname());
         member.setHeadImg(mpUser.getHeadImgUrl());
+        member.setLastLoginTime(new Date());
         memberManager.save(member);
         mpUser.setMemberId(member.getId());
         mpUserManager.save(mpUser);
@@ -39,6 +42,7 @@ public class MemberBiz {
             account.setId(member.getId());
             accountManager.save(account);
         }
+        return member;
     }
 
     @Transactional
@@ -55,6 +59,10 @@ public class MemberBiz {
 
     public MpUser getMpUser(String openId) {
         return mpUserManager.get(openId);
+    }
+
+    public MpUser getMpUser(long memberId) {
+        return mpUserManager.getByMemberId(memberId);
     }
 
     public Account getAccount(long id) {

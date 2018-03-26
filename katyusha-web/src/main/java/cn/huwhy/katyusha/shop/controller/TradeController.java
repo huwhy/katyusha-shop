@@ -2,11 +2,14 @@ package cn.huwhy.katyusha.shop.controller;
 
 import cn.huwhy.interfaces.Json;
 import cn.huwhy.katyusha.shop.biz.ItemBiz;
-import cn.huwhy.katyusha.shop.biz.ShoppingCartBiz;
 import cn.huwhy.katyusha.shop.biz.TradeBiz;
 import cn.huwhy.katyusha.shop.model.Order;
 import cn.huwhy.katyusha.shop.model.Sku;
 import cn.huwhy.katyusha.shop.model.Trade;
+import cn.huwhy.katyusha.shop.util.RequestUtil;
+import cn.huwhy.wx.sdk.aes.MpConfig;
+import cn.huwhy.wx.sdk.api.WXPayApi;
+import cn.huwhy.wx.sdk.model.WxOrderResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,15 +28,21 @@ public class TradeController extends BaseController {
     @Autowired
     private ItemBiz itemBiz;
     @Autowired
-    private ShoppingCartBiz shoppingCartBiz;
-    @Autowired
     private TradeBiz tradeBiz;
+    @Autowired
+    private MpConfig mpConfig;
 
     @RequestMapping(method = POST)
     public Json add(@RequestBody Trade trade, HttpServletRequest request) {
         trade.setMemberId(getMemberId(request));
         tradeBiz.add(trade);
-        return Json.SUCCESS().setData(trade);
+        WxOrderResult orderResult = WXPayApi.wxPrepay(mpConfig.getAppId(), mpConfig.getPartnerId(), mpConfig.getPartnerKey(),
+                Long.toString(trade.getId()), trade.getOrders().get(0).getTitle(), trade.getTotalPayment(),
+                RequestUtil.getRemoteIp(request), getOpenId(request), mpConfig.getNotifyUrl());
+        if (orderResult.ok()) {
+            tradeBiz.prepay(trade.getId(), orderResult.getPrepay_id());
+        }
+        return Json.SUCCESS().setData(orderResult);
     }
 
     @RequestMapping(value = "{id:\\d++}", method = GET)

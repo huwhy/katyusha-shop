@@ -49,4 +49,10 @@
     <include refid="COLUMNS"/>
     from mp_user where open_id = #{id}
   </select>
+  
+  <select id="getByMemberId" resultType="MpUserPo" parameterType="java.lang.Long">
+    select
+    <include refid="COLUMNS"/>
+    from mp_user where member_id = #{memberId}
+  </select>
 </mapper>
