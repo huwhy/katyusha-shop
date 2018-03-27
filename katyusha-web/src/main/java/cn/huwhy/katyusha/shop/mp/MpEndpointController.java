@@ -2,6 +2,7 @@ package cn.huwhy.katyusha.shop.mp;
 
 import cn.huwhy.common.util.StringUtil;
 import cn.huwhy.wx.sdk.aes.AesException;
+import cn.huwhy.wx.sdk.aes.MpConfig;
 import cn.huwhy.wx.sdk.aes.WXBizMsgCrypt;
 import cn.huwhy.wx.sdk.aes.WxCryptUtil;
 import cn.huwhy.wx.sdk.listener.EventHandler;
@@ -28,7 +29,8 @@ public class MpEndpointController {
     private final static String ERROR_MSG = "非法请求";
 
     @Autowired
-    private WXBizMsgCrypt wxBizMsgCrypt;
+    private MpConfig mpConfig;
+
     @Autowired
     private EventHandler eventHandler;
 
@@ -43,7 +45,7 @@ public class MpEndpointController {
             return;
         }
         logger.debug("endpoint-params: {}, {}, {}, {}", signature, nonce, timestamp, echostr);
-        if (!wxBizMsgCrypt.check(signature, timestamp, nonce)) {
+        if (!WXBizMsgCrypt.check(mpConfig.getToken(), signature, timestamp, nonce)) {
             printResponse(response, ERROR_MSG);
             return;
         }
@@ -55,7 +57,7 @@ public class MpEndpointController {
             xmlMsg.append(new String(b, 0, n, "iso8859-1"));
         }
         logger.debug("receive-xml: {}", xmlMsg);
-        Command command = WxCryptUtil.transform(wxBizMsgCrypt, signature, timestamp, nonce, xmlMsg.toString());
+        Command command = WxCryptUtil.transform(mpConfig, signature, timestamp, nonce, xmlMsg.toString());
         String replyMsg = eventHandler.handler(command);
         logger.debug("reply-xml: {}", replyMsg);
 //        String encryptMsg = WxCryptUtil.encryptMsg(wxBizMsgCrypt, replyMsg, timestamp, nonce);

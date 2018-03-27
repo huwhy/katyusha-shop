@@ -1,8 +1,6 @@
 package cn.huwhy.katyusha.shop.mp;
 
-import cn.huwhy.wx.sdk.aes.AesException;
 import cn.huwhy.wx.sdk.aes.MpConfig;
-import cn.huwhy.wx.sdk.aes.WXBizMsgCrypt;
 import cn.huwhy.wx.sdk.api.HttpClientUtil;
 import cn.huwhy.wx.sdk.api.WXPayApi;
 import cn.huwhy.wx.sdk.listener.EventHandler;
@@ -28,11 +26,6 @@ import java.security.KeyStore;
 public class WxMpConfig {
 
     @Bean
-    public WXBizMsgCrypt wxBizMsgCrypt(@Autowired  MpConfig mpConfig) throws AesException {
-        return new WXBizMsgCrypt(mpConfig.getToken(), mpConfig.getAesKey(), mpConfig.getAppId());
-    }
-
-    @Bean
     public MpConfig mpConfig(@Value("${mp.appId}") String appId,
                              @Value("${mp.secret}") String secret,
                              @Value("${mp.token}") String token,
@@ -46,7 +39,7 @@ public class WxMpConfig {
         config.setAppId(appId);
         config.setSecret(secret);
         config.setToken(token);
-        config.setAesKey(aesKey);
+        config.setAesKey2(aesKey);
         config.setPartnerId(partnerId);
         config.setPartnerKey(partnerKey);
         config.setNotifyUrl(notifyUrl);
