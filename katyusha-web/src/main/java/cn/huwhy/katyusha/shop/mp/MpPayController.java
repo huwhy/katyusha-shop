@@ -23,7 +23,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
-@RequestMapping("/wechat/mp")
+@RequestMapping("/mp")
 public class MpPayController {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
@@ -42,7 +42,7 @@ public class MpPayController {
     @Autowired
     private TradeBiz tradeBiz;
 
-    @RequestMapping(value = "pay.client", method = {GET, POST})
+    @RequestMapping(value = "pay", method = {GET, POST})
     public void callback(HttpServletRequest request, HttpServletResponse response) {
         try {
             // 获取微信回调xml
