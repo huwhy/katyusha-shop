@@ -46,7 +46,7 @@ public class MvcConfig extends WebMvcConfigurationSupport {
     protected void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(oAuthInterceptor)
                 .addPathPatterns("/**")
-                .excludePathPatterns("/api/oauth.html", "/api/oauth_base.html", "/api/mp/endpoint");
+                .excludePathPatterns("/api/oauth.html", "/api/oauth_base.html", "/wechat/mp/endpoint", "/wechat/mp/pay.client");
         super.addInterceptors(registry);
     }
 
