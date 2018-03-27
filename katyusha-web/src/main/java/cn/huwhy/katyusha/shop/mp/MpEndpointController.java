@@ -22,7 +22,7 @@ import java.io.PrintWriter;
 import java.security.NoSuchAlgorithmException;
 
 @Controller
-@RequestMapping("/mp")
+@RequestMapping("/wechat/mp")
 public class MpEndpointController {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
@@ -34,7 +34,7 @@ public class MpEndpointController {
     @Autowired
     private EventHandler eventHandler;
 
-    @RequestMapping("endpoint")
+    @RequestMapping("mp.client")
     public void endpoint(HttpServletRequest request, HttpServletResponse response) throws AesException, NoSuchAlgorithmException, IOException {
         String signature = request.getParameter("signature");
         String nonce = request.getParameter("nonce");
