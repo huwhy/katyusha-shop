@@ -1,5 +1,6 @@
 package cn.huwhy.katyusha.shop.controller;
 
+import cn.huwhy.common.json.JsonUtil;
 import cn.huwhy.katyusha.shop.biz.MemberBiz;
 import cn.huwhy.katyusha.shop.model.Member;
 import cn.huwhy.katyusha.shop.model.MpUser;
@@ -15,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 
 @Controller
+@RequestMapping("/api")
 public class OauthController extends BaseController {
     @Autowired
     private MpConfigUtil mpConfigUtil;
@@ -23,17 +25,19 @@ public class OauthController extends BaseController {
     @Value("${common.base-url:}")
     private String baseUrl;
 
-    @RequestMapping(value = "/api/oauth.html", method = {RequestMethod.GET})
+    @RequestMapping(value = "/oauth.html", method = {RequestMethod.GET})
     public String oauth(HttpServletRequest request,
                         @RequestParam(name = "code") String code,
                         @RequestParam(name = "state") String state) {
+        logger.info("oauth: code-{}, state-{}", code, state);
         MpUser mpUser = mpConfigUtil.getOAuth2UserInfo(code);
         Member member = memberBiz.saveForMp(mpUser);
+        logger.info("oauth-user: mpUser-{}", JsonUtil.toJson(mpUser));
         setMember(request, member, mpUser);
         return "redirect:" + state;
     }
 
-    @RequestMapping(value = "/api/oauth_base.html", method = {RequestMethod.GET})
+    @RequestMapping(value = "/oauth_base.html", method = {RequestMethod.GET})
     public String oauthBaseUser(HttpServletRequest request,
                                 @RequestParam(name = "code") String code,
                                 @RequestParam(name = "state") String state) throws UnsupportedEncodingException {
