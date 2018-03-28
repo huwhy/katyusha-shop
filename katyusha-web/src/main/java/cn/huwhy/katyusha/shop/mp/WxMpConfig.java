@@ -34,7 +34,8 @@ public class WxMpConfig {
                              @Value("${mp.partnerKey:}") String partnerKey,
                              @Value("${mp.certPath:}") String certPath,
                              @Value("${mp.certPassword:}") String certPassword,
-                             @Value("${mp.notifyUrl:}") String notifyUrl) {
+                             @Value("${mp.notifyUrl:}") String notifyUrl,
+                             @Value("${mp.secure:false}") boolean secure) {
         MpConfig config = new MpConfig();
         config.setAppId(appId);
         config.setSecret(secret);
@@ -43,6 +44,7 @@ public class WxMpConfig {
         config.setPartnerId(partnerId);
         config.setPartnerKey(partnerKey);
         config.setNotifyUrl(notifyUrl);
+        config.setSecure(secure);
         if (!Strings.isNullOrEmpty(certPath) && !Strings.isNullOrEmpty(certPassword)) {
             FileInputStream fileInputStream = null;
             try {

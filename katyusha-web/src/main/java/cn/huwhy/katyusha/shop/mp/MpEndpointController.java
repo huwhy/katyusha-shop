@@ -54,7 +54,7 @@ public class MpEndpointController {
         StringBuilder xmlMsg = new StringBuilder();
         byte[] b = new byte[4096];
         for (int n; (n = in.read(b)) != -1; ) {
-            xmlMsg.append(new String(b, 0, n, "iso8859-1"));
+            xmlMsg.append(new String(b, 0, n, "UTF-8"));
         }
         logger.debug("receive-xml: {}", xmlMsg);
         Command command = WxCryptUtil.transform(mpConfig, signature, timestamp, nonce, xmlMsg.toString());
