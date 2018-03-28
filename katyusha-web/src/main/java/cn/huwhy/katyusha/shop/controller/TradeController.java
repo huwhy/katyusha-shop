@@ -44,7 +44,7 @@ public class TradeController extends BaseController {
         if (orderResult.ok()) {
             tradeBiz.prepay(trade.getId(), orderResult.getPrepay_id());
         }
-        return Json.SUCCESS().setData(orderResult);
+        return Json.SUCCESS().setData(orderResult).setMessage(Long.toString(trade.getId()));
     }
 
     @RequestMapping(value = "{id:\\d++}", method = GET)
