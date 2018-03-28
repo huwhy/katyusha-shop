@@ -51,6 +51,7 @@ public class MpPayController {
             StringBuilder sb = new StringBuilder();
             while ((line = br.readLine()) != null)
                 sb.append(line);
+            logger.debug("pay notice: {}", sb);
             WxPayResult result = WxCryptUtil.transform(sb.toString());
 
             // 验证签名信息
