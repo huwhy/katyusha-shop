@@ -22,6 +22,7 @@ public class MemberManager {
             po.setId(memberDao.nextId());
             member.setId(po.getId());
         }
+        memberDao.save(po);
     }
 
     public Member get(long id) {
