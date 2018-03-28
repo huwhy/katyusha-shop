@@ -1,5 +1,6 @@
 package cn.huwhy.katyusha.shop.controller;
 
+import cn.huwhy.common.json.JsonUtil;
 import cn.huwhy.interfaces.Json;
 import cn.huwhy.katyusha.shop.biz.ItemBiz;
 import cn.huwhy.katyusha.shop.biz.TradeBiz;
@@ -39,6 +40,7 @@ public class TradeController extends BaseController {
         WxOrderResult orderResult = WXPayApi.wxPrepay(mpConfig.getAppId(), mpConfig.getPartnerId(), mpConfig.getPartnerKey(),
                 Long.toString(trade.getId()), trade.getOrders().get(0).getTitle(), trade.getTotalPayment(),
                 RequestUtil.getRemoteIp(request), getOpenId(request), mpConfig.getNotifyUrl());
+        logger.info("trade prepay: {}", JsonUtil.toJson(orderResult));
         if (orderResult.ok()) {
             tradeBiz.prepay(trade.getId(), orderResult.getPrepay_id());
         }

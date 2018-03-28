@@ -11,7 +11,7 @@
     )values(
     #{id},#{memberId},#{itemId},#{skuId},#{num},#{modified},#{created}
     ) on duplicate key update
-    `num`=VALUES(`num`),modified=VALUES(modified)
+    `num`=VALUES(`num`),modified=VALUES(modified),deleted=0
   </insert>
   
   <update id="updateNum">
