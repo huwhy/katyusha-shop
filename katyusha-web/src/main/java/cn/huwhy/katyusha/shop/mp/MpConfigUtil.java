@@ -6,6 +6,7 @@ import cn.huwhy.katyusha.shop.biz.MemberBiz;
 import cn.huwhy.katyusha.shop.model.MpUser;
 import cn.huwhy.wx.sdk.aes.MpConfig;
 import cn.huwhy.wx.sdk.aes.SHA1;
+import cn.huwhy.wx.sdk.aes.WxCryptUtil;
 import cn.huwhy.wx.sdk.api.AccessTokenApi;
 import cn.huwhy.wx.sdk.api.JsApiTicketApi;
 import cn.huwhy.wx.sdk.api.UserApi;
@@ -20,6 +21,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 public class MpConfigUtil {
@@ -135,6 +138,17 @@ public class MpConfigUtil {
         }
         url += "#wechat_redirect";
         return url;
+    }
+
+    public Map<String, String> generalJsPay(String prepayId) throws Exception {
+        Map<String, String> payInfo = new HashMap<>();
+        payInfo.put("appId", mpConfig.getAppId());
+        payInfo.put("timeStamp", String.valueOf(System.currentTimeMillis() / 1000));
+        payInfo.put("nonceStr", System.currentTimeMillis() + "");
+        payInfo.put("package", "prepay_id=" + prepayId);
+        payInfo.put("signType", "MD5");
+        payInfo.put("paySign", WxCryptUtil.createSign(payInfo, mpConfig.getPartnerKey()));
+        return payInfo;
     }
 
 }

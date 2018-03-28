@@ -9,6 +9,7 @@ import cn.huwhy.katyusha.shop.model.Order;
 import cn.huwhy.katyusha.shop.model.Sku;
 import cn.huwhy.katyusha.shop.model.Trade;
 import cn.huwhy.katyusha.shop.model.TradeStatus;
+import cn.huwhy.katyusha.shop.mp.MpConfigUtil;
 import cn.huwhy.katyusha.shop.util.RequestUtil;
 import cn.huwhy.wx.sdk.aes.MpConfig;
 import cn.huwhy.wx.sdk.api.MpOrderApi;
@@ -19,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+
+import java.util.Map;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -33,17 +36,21 @@ public class TradeController extends BaseController {
     private TradeBiz tradeBiz;
     @Autowired
     private MpConfig mpConfig;
+    @Autowired
+    private MpConfigUtil mpConfigUtil;
 
     @RequestMapping(method = POST)
-    public Json add(@RequestBody Trade trade, HttpServletRequest request) {
+    public Json add(@RequestBody Trade trade, HttpServletRequest request) throws Exception {
         trade.setMemberId(getMemberId(request));
         tradeBiz.add(trade);
-        MpOrderApi.MpOrderResult orderResult = generalPrepay(trade, request);
-        return Json.SUCCESS().setData(orderResult).setMessage(Long.toString(trade.getId()));
+        Map<String, String> jsPay = generalPrepay(trade, request);
+        Trade dbTrade = tradeBiz.get(trade.getId());
+        dbTrade.setPayParams(jsPay);
+        return Json.SUCCESS().setData(dbTrade);
     }
 
     @RequestMapping(value = "{id:\\d++}", method = GET)
-    public Json get(@PathVariable("id") long id, HttpServletRequest request) {
+    public Json get(@PathVariable("id") long id, HttpServletRequest request) throws Exception {
         Trade trade = tradeBiz.get(id);
         if (trade == null || trade.getMemberId() != getMemberId(request)) {
             return Json.ERROR().setMessage("订单不存在!");
@@ -53,12 +60,16 @@ public class TradeController extends BaseController {
             order.setImg(sku.getImg());
         }
         if (trade.getStatus().equals(TradeStatus.CREATED)) {
-            generalPrepay(trade, request);
+            Map<String, String> jsPay = generalPrepay(trade, request);
+            trade.setPayParams(jsPay);
+        } else if (trade.getStatus().equals(TradeStatus.WAIT_PAY)) {
+            Map<String, String> jsPay = mpConfigUtil.generalJsPay(trade.getPrepayId());
+            trade.setPayParams(jsPay);
         }
         return Json.SUCCESS().setData(trade);
     }
 
-    private MpOrderApi.MpOrderResult generalPrepay(Trade trade, HttpServletRequest request) {
+    private Map<String, String> generalPrepay(Trade trade, HttpServletRequest request) throws Exception {
         MpOrderApi.MpOrderParam param = new MpOrderApi.MpOrderParam();
         param.setAppId(mpConfig.getAppId());
         param.setMchId(mpConfig.getPartnerId());
@@ -71,9 +82,12 @@ public class TradeController extends BaseController {
         param.setNotifyUrl(mpConfig.getNotifyUrl());
         MpOrderApi.MpOrderResult orderResult = MpOrderApi.orderByMp(param);
         logger.info("trade prepay: {}", JsonUtil.toJson(orderResult));
+        Map<String, String> map;
         if (StringUtil.isNotEmpty(orderResult.getPrepayId())) {
             tradeBiz.prepay(trade.getId(), orderResult.getPrepayId());
+            map = mpConfigUtil.generalJsPay(orderResult.getPrepayId());
+            return map;
         }
-        return orderResult;
+        return null;
     }
 }

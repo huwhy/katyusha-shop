@@ -3,6 +3,7 @@ package cn.huwhy.katyusha.shop.biz;
 import cn.huwhy.katyusha.shop.biz.mgr.MpPayManager;
 import cn.huwhy.katyusha.shop.biz.mgr.OrderManager;
 import cn.huwhy.katyusha.shop.biz.mgr.TradeManager;
+import cn.huwhy.katyusha.shop.dao.po.MpPayPo;
 import cn.huwhy.katyusha.shop.model.Order;
 import cn.huwhy.katyusha.shop.model.RefundStatus;
 import cn.huwhy.katyusha.shop.model.ShoppingCart;
@@ -72,6 +73,9 @@ public class TradeBiz {
     public Trade get(long id) {
         Trade trade = tradeManager.get(id);
         trade.setOrders(orderManager.getByIds(trade.getOrderIds()));
+        if (TradeStatus.WAIT_PAY.equals(trade.getStatus())) {
+            trade.setPrepayId(mpPayManager.getPrepayId(id));
+        }
         return trade;
     }
 

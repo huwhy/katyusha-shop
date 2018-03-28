@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public class Trade implements Serializable {
     private long id;
@@ -243,6 +244,8 @@ public class Trade implements Serializable {
 
     private List<Long> cartIds;
     private List<Order> orders;
+    private String prepayId;
+    private Map<String, String> payParams;
 
     public List<Long> getCartIds() {
         return cartIds;
@@ -258,5 +261,21 @@ public class Trade implements Serializable {
 
     public void setOrders(List<Order> orders) {
         this.orders = orders;
+    }
+
+    public String getPrepayId() {
+        return prepayId;
+    }
+
+    public void setPrepayId(String prepayId) {
+        this.prepayId = prepayId;
+    }
+
+    public Map<String, String> getPayParams() {
+        return payParams;
+    }
+
+    public void setPayParams(Map<String, String> payParams) {
+        this.payParams = payParams;
     }
 }

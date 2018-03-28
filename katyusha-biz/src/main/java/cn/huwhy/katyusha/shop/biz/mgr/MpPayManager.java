@@ -19,4 +19,9 @@ public class MpPayManager {
         MpPayPo po = mpPayDao.get(tid);
         mpPayDao.save(new MpPayPo(tid, po.getPrepayId(), transactionId));
     }
+
+    public String getPrepayId(long tid) {
+        MpPayPo po = mpPayDao.get(tid);
+        return po.getPrepayId();
+    }
 }
