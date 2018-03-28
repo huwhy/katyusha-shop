@@ -1,12 +1,14 @@
 package cn.huwhy.katyusha.shop.controller;
 
 import cn.huwhy.common.json.JsonUtil;
+import cn.huwhy.common.util.StringUtil;
 import cn.huwhy.interfaces.Json;
 import cn.huwhy.katyusha.shop.biz.ItemBiz;
 import cn.huwhy.katyusha.shop.biz.TradeBiz;
 import cn.huwhy.katyusha.shop.model.Order;
 import cn.huwhy.katyusha.shop.model.Sku;
 import cn.huwhy.katyusha.shop.model.Trade;
+import cn.huwhy.katyusha.shop.model.TradeStatus;
 import cn.huwhy.katyusha.shop.util.RequestUtil;
 import cn.huwhy.wx.sdk.aes.MpConfig;
 import cn.huwhy.wx.sdk.api.MpOrderApi;
@@ -36,21 +38,7 @@ public class TradeController extends BaseController {
     public Json add(@RequestBody Trade trade, HttpServletRequest request) {
         trade.setMemberId(getMemberId(request));
         tradeBiz.add(trade);
-        MpOrderApi.MpOrderParam param = new MpOrderApi.MpOrderParam();
-        param.setAppId(mpConfig.getAppId());
-        param.setMchId(mpConfig.getPartnerId());
-        param.setMchKey(mpConfig.getPartnerKey());
-        param.setOutTradeNo(Long.toString(trade.getId()));
-        param.setBody(trade.getOrders().get(0).getTitle());
-        param.setTotalFee(trade.getTotalPayment());
-        param.setSpbillCreateIp(RequestUtil.getRemoteIp(request));
-        param.setOpenId(getOpenId(request));
-        param.setNotifyUrl(mpConfig.getNotifyUrl());
-        MpOrderApi.MpOrderResult orderResult = MpOrderApi.orderByMp(param);
-        logger.info("trade prepay: {}", JsonUtil.toJson(orderResult));
-        if (orderResult.isOk()) {
-            tradeBiz.prepay(trade.getId(), orderResult.getPrepayId());
-        }
+        MpOrderApi.MpOrderResult orderResult = generalPrepay(trade, request);
         return Json.SUCCESS().setData(orderResult).setMessage(Long.toString(trade.getId()));
     }
 
@@ -64,6 +52,28 @@ public class TradeController extends BaseController {
             Sku sku = itemBiz.getSku(order.getSkuId());
             order.setImg(sku.getImg());
         }
+        if (trade.getStatus().equals(TradeStatus.CREATED)) {
+            generalPrepay(trade, request);
+        }
         return Json.SUCCESS().setData(trade);
+    }
+
+    private MpOrderApi.MpOrderResult generalPrepay(Trade trade, HttpServletRequest request) {
+        MpOrderApi.MpOrderParam param = new MpOrderApi.MpOrderParam();
+        param.setAppId(mpConfig.getAppId());
+        param.setMchId(mpConfig.getPartnerId());
+        param.setMchKey(mpConfig.getPartnerKey());
+        param.setOutTradeNo(Long.toString(trade.getId()));
+        param.setBody(trade.getOrders().get(0).getTitle());
+        param.setTotalFee(trade.getTotalPayment());
+        param.setSpbillCreateIp(RequestUtil.getRemoteIp(request));
+        param.setOpenId(getOpenId(request));
+        param.setNotifyUrl(mpConfig.getNotifyUrl());
+        MpOrderApi.MpOrderResult orderResult = MpOrderApi.orderByMp(param);
+        logger.info("trade prepay: {}", JsonUtil.toJson(orderResult));
+        if (StringUtil.isNotEmpty(orderResult.getPrepayId())) {
+            tradeBiz.prepay(trade.getId(), orderResult.getPrepayId());
+        }
+        return orderResult;
     }
 }
