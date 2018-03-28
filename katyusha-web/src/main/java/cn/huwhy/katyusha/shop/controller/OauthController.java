@@ -29,10 +29,10 @@ public class OauthController extends BaseController {
     public String oauth(HttpServletRequest request,
                         @RequestParam(name = "code") String code,
                         @RequestParam(name = "state") String state) {
-        logger.info("oauth: code-{}, state-{}", code, state);
+        logger.debug("oauth: code-{}, state-{}", code, state);
         MpUser mpUser = mpConfigUtil.getOAuth2UserInfo(code);
         Member member = memberBiz.saveForMp(mpUser);
-        logger.info("oauth-user: mpUser-{}", JsonUtil.toJson(mpUser));
+        logger.debug("oauth-user: mpUser-{}", JsonUtil.toJson(mpUser));
         setMember(request, member, mpUser);
         return "redirect:" + state;
     }
