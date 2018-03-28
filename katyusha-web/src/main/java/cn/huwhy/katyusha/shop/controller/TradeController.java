@@ -9,8 +9,7 @@ import cn.huwhy.katyusha.shop.model.Sku;
 import cn.huwhy.katyusha.shop.model.Trade;
 import cn.huwhy.katyusha.shop.util.RequestUtil;
 import cn.huwhy.wx.sdk.aes.MpConfig;
-import cn.huwhy.wx.sdk.api.WXPayApi;
-import cn.huwhy.wx.sdk.model.WxOrderResult;
+import cn.huwhy.wx.sdk.api.MpOrderApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,12 +36,20 @@ public class TradeController extends BaseController {
     public Json add(@RequestBody Trade trade, HttpServletRequest request) {
         trade.setMemberId(getMemberId(request));
         tradeBiz.add(trade);
-        WxOrderResult orderResult = WXPayApi.wxPrepay(mpConfig.getAppId(), mpConfig.getPartnerId(), mpConfig.getPartnerKey(),
-                Long.toString(trade.getId()), trade.getOrders().get(0).getTitle(), trade.getTotalPayment(),
-                RequestUtil.getRemoteIp(request), getOpenId(request), mpConfig.getNotifyUrl());
+        MpOrderApi.MpOrderParam param = new MpOrderApi.MpOrderParam();
+        param.setAppId(mpConfig.getAppId());
+        param.setMchId(mpConfig.getPartnerId());
+        param.setMchKey(mpConfig.getPartnerKey());
+        param.setOutTradeNo(Long.toString(trade.getId()));
+        param.setBody(trade.getOrders().get(0).getTitle());
+        param.setTotalFee(trade.getTotalPayment());
+        param.setSpbillCreateIp(RequestUtil.getRemoteIp(request));
+        param.setOpenId(getOpenId(request));
+        param.setNotifyUrl(mpConfig.getNotifyUrl());
+        MpOrderApi.MpOrderResult orderResult = MpOrderApi.orderByMp(param);
         logger.info("trade prepay: {}", JsonUtil.toJson(orderResult));
-        if (orderResult.ok()) {
-            tradeBiz.prepay(trade.getId(), orderResult.getPrepay_id());
+        if (orderResult.isOk()) {
+            tradeBiz.prepay(trade.getId(), orderResult.getPrepayId());
         }
         return Json.SUCCESS().setData(orderResult).setMessage(Long.toString(trade.getId()));
     }

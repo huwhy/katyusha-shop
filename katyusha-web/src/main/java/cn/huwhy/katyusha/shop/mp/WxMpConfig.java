@@ -2,7 +2,7 @@ package cn.huwhy.katyusha.shop.mp;
 
 import cn.huwhy.wx.sdk.aes.MpConfig;
 import cn.huwhy.wx.sdk.api.HttpClientUtil;
-import cn.huwhy.wx.sdk.api.WXPayApi;
+import cn.huwhy.wx.sdk.api.MpOrderApi;
 import cn.huwhy.wx.sdk.listener.EventHandler;
 import cn.huwhy.wx.sdk.message.Message;
 import com.google.common.base.Strings;
@@ -76,7 +76,7 @@ public class WxMpConfig {
             }
             CloseableHttpClient httpClient = builder.build();
             HttpClientUtil.setHttpClient(httpClient);
-            WXPayApi.setHttpClient(httpClient);
+            MpOrderApi.setHttpClient(httpClient);
         }
         return config;
     }

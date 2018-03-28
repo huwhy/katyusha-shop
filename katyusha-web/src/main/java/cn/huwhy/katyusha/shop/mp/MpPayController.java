@@ -93,7 +93,7 @@ public class MpPayController {
         }
     }
 
-    private Boolean checkSign(WxPayResult payResult) {
+    private Boolean checkSign(WxPayResult payResult) throws Exception {
         Map<String, String> parameters = new HashMap<>();
         if (StringUtil.isNotEmpty(payResult.getReturn_code()))
             parameters.put("return_code", payResult.getReturn_code());
