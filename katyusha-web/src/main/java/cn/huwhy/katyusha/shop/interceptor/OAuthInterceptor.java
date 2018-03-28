@@ -29,7 +29,7 @@ public class OAuthInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
-
+        logger.debug("request-uri: {}", request.getRequestURI());
         if (request.getSession().getAttribute("S_MEMBER") == null) {
             if (RequestUtil.isAjax(request)) {
                 response.setCharacterEncoding("UTF-8");
