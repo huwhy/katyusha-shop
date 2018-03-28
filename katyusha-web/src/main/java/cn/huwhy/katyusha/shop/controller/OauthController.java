@@ -41,8 +41,10 @@ public class OauthController extends BaseController {
     public String oauthBaseUser(HttpServletRequest request,
                                 @RequestParam(name = "code") String code,
                                 @RequestParam(name = "state") String state) throws UnsupportedEncodingException {
+        logger.info("oauth: code-{}, state-{}", code, state);
         String openId = mpConfigUtil.getOAuth2OpenId(code);
         MpUser mpUser = memberBiz.getMpUser(openId);
+        logger.info("oauth-user: mpUser-{}", JsonUtil.toJson(mpUser));
         if (mpUser == null) {
             return "redirect:" + mpConfigUtil.getOAuth2Url(baseUrl + "/api/oauth.html", false, state);
         } else {
