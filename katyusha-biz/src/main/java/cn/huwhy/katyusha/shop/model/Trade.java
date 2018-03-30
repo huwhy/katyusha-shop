@@ -243,6 +243,7 @@ public class Trade implements Serializable {
     }
 
     private List<Long> cartIds;
+    private ShoppingCart cart;
     private List<Order> orders;
     private String prepayId;
     private Map<String, String> payParams;
@@ -253,6 +254,14 @@ public class Trade implements Serializable {
 
     public void setCartIds(List<Long> cartIds) {
         this.cartIds = cartIds;
+    }
+
+    public ShoppingCart getCart() {
+        return cart;
+    }
+
+    public void setCart(ShoppingCart cart) {
+        this.cart = cart;
     }
 
     public List<Order> getOrders() {
