@@ -80,4 +80,8 @@ public class ItemManager {
     public int shelf(long id, ItemStatus status) {
         return itemDao.shelf(id, status);
     }
+
+    public int addSaleNum(long id, int num) {
+        return itemDao.plusSaleNum(id, num);
+    }
 }

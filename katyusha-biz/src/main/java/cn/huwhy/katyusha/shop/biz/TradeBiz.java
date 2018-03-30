@@ -1,6 +1,7 @@
 package cn.huwhy.katyusha.shop.biz;
 
 import cn.huwhy.common.util.CollectionUtil;
+import cn.huwhy.interfaces.Paging;
 import cn.huwhy.katyusha.shop.biz.mgr.ItemManager;
 import cn.huwhy.katyusha.shop.biz.mgr.MpPayManager;
 import cn.huwhy.katyusha.shop.biz.mgr.OrderManager;
@@ -14,6 +15,7 @@ import cn.huwhy.katyusha.shop.model.ShoppingCart;
 import cn.huwhy.katyusha.shop.model.Sku;
 import cn.huwhy.katyusha.shop.model.Trade;
 import cn.huwhy.katyusha.shop.model.TradeStatus;
+import cn.huwhy.katyusha.shop.model.TradeTerm;
 import com.google.common.collect.Collections2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -73,6 +75,7 @@ public class TradeBiz {
                 orders.add(order);
                 totalAmount += order.getTotalAmount();
                 totalPayment += order.getPayment();
+                itemManager.addSaleNum(order.getItemId(), order.getNum());
             }
             trade.setOrders(orders);
             trade.setOrderIds(Collections2.transform(orders, Order::getId));
@@ -137,5 +140,15 @@ public class TradeBiz {
             orderManager.paid(trade.getOrderIds());
             mpPayManager.paid(id, transactionId);
         }
+    }
+
+    public Paging<Trade> findTrades(TradeTerm term, boolean orders) {
+        Paging<Trade> paging = tradeManager.findPaging(term);
+        if (orders) {
+            for (Trade trade : paging.getData()) {
+                trade.setOrders(orderManager.getByIds(trade.getOrderIds()));
+            }
+        }
+        return paging;
     }
 }

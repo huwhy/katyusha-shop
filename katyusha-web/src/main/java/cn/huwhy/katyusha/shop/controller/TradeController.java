@@ -1,14 +1,17 @@
 package cn.huwhy.katyusha.shop.controller;
 
 import cn.huwhy.common.json.JsonUtil;
+import cn.huwhy.common.util.EnumUtil;
 import cn.huwhy.common.util.StringUtil;
 import cn.huwhy.interfaces.Json;
+import cn.huwhy.interfaces.Paging;
 import cn.huwhy.katyusha.shop.biz.ItemBiz;
 import cn.huwhy.katyusha.shop.biz.TradeBiz;
 import cn.huwhy.katyusha.shop.model.Order;
 import cn.huwhy.katyusha.shop.model.Sku;
 import cn.huwhy.katyusha.shop.model.Trade;
 import cn.huwhy.katyusha.shop.model.TradeStatus;
+import cn.huwhy.katyusha.shop.model.TradeTerm;
 import cn.huwhy.katyusha.shop.mp.MpConfigUtil;
 import cn.huwhy.katyusha.shop.util.RequestUtil;
 import cn.huwhy.wx.sdk.aes.MpConfig;
@@ -17,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -50,14 +54,16 @@ public class TradeController extends BaseController {
     }
 
     @RequestMapping(value = "{id:\\d++}", method = GET)
-    public Json get(@PathVariable("id") long id, HttpServletRequest request) throws Exception {
+    public Json trade(@PathVariable("id") long id, HttpServletRequest request) throws Exception {
         Trade trade = tradeBiz.get(id);
         if (trade == null || trade.getMemberId() != getMemberId(request)) {
             return Json.ERROR().setMessage("订单不存在!");
         }
         for (Order order : trade.getOrders()) {
-            Sku sku = itemBiz.getSku(order.getSkuId());
-            order.setImg(sku.getImg());
+            if (StringUtil.isEmpty(order.getImg())) {
+                Sku sku = itemBiz.getSku(order.getSkuId());
+                order.setImg(sku.getImg());
+            }
         }
         if (trade.getStatus().equals(TradeStatus.CREATED)) {
             Map<String, String> jsPay = generalPrepay(trade, request);
@@ -67,6 +73,20 @@ public class TradeController extends BaseController {
             trade.setPayParams(jsPay);
         }
         return Json.SUCCESS().setData(trade);
+    }
+
+    @RequestMapping(method = GET)
+    public Json list(HttpServletRequest request,
+                     @RequestParam("status") String statusName,
+                     @RequestParam(value = "size", required = false, defaultValue = "10") Long size,
+                     @RequestParam(value = "page", required = false, defaultValue = "1") Long page) {
+        TradeTerm term = new TradeTerm();
+        term.setMemberId(getMemberId(request));
+        term.setStatus(EnumUtil.nameOf(TradeStatus.class, statusName));
+        term.setPage(page);
+        term.setSize(size);
+        Paging<Trade> paging = tradeBiz.findTrades(term, true);
+        return Json.SUCCESS().setData(paging);
     }
 
     private Map<String, String> generalPrepay(Trade trade, HttpServletRequest request) throws Exception {

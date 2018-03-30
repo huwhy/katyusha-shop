@@ -11,6 +11,7 @@ public class Order implements Serializable {
     private String title;
     private String spec;
     private String barcode;
+    private String img;
     private int num;
     private int price;
     private int postFee;
@@ -175,8 +176,6 @@ public class Order implements Serializable {
     public void setCreated(Date created) {
         this.created = created;
     }
-
-    private String img;
 
     public String getImg() {
         return img;

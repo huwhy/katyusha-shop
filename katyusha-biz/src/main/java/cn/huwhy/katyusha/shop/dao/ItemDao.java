@@ -17,4 +17,6 @@ public interface ItemDao extends BaseDao<ItemPo, Long> {
     List<ItemPo> listByIds(@Param("ids") Collection<Long> ids);
 
     int shelf(@Param("id") long id, @Param("status")ItemStatus status);
+
+    int plusSaleNum(@Param("id") long id, @Param("num") int num);
 }

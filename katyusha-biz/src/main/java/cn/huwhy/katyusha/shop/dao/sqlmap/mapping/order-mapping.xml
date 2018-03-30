@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="cn.huwhy.katyusha.shop.dao.OrderDao">
   <sql id="COLUMNS">
-    id,`tid`,item_id,title,sku_id,spec,barcode,
+    id,`tid`,item_id,title,sku_id,spec,barcode,img,
     num,price,post_fee,total_amount,payment,status,
     refund_status,evaluate,commission_fee,modified,
     end_time,created
@@ -12,7 +12,7 @@
     insert into orders(
     <include refid="COLUMNS"/>
     )values(
-    #{id},#{tid},#{itemId},#{title},#{skuId},#{spec},#{barcode},
+    #{id},#{tid},#{itemId},#{title},#{skuId},#{spec},#{barcode},#{img},
     #{num},#{price},#{postFee},#{totalAmount},#{payment},
     #{status.value},#{refundStatus.value},#{evaluate},
     #{commissionFee},#{modified},#{endTime},#{created}
@@ -29,7 +29,7 @@
     <foreach collection="list" item="item" index="index"
              separator=",">
       (
-      #{item.id},#{item.tid},#{item.itemId},#{item.title},#{item.skuId},#{item.spec},#{item.barcode},
+      #{item.id},#{item.tid},#{item.itemId},#{item.title},#{item.skuId},#{item.spec},#{item.barcode},#{item.img},
       #{item.num},#{item.price},#{item.postFee},#{item.totalAmount},#{item.payment},
       #{item.status.value},#{item.refundStatus.value},#{item.evaluate},
       #{item.commissionFee},#{item.modified},#{item.endTime},#{item.created}

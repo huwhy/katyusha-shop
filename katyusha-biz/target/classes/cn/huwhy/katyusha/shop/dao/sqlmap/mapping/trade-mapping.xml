@@ -34,6 +34,35 @@
     from trade where id = #{id}
   </select>
   
+  <select id="findPaging" resultType="TradePo">
+    select
+    <include refid="COLUMNS"/>
+    from trade
+    <where>
+      <if test="id > 0">
+        and id = #{id}
+      </if>
+      <if test="memberId > 0">
+        and member_id=#{memberId}
+      </if>
+      <if test="status != null">
+        and status=#{status.value}
+      </if>
+      <if test="payTimeFrom != null">
+        and pay_time &gt;=#{payTimeFrom}
+      </if>
+      <if test="payTimeTo != null">
+        and pay_time &lt; #{payTimeTo}
+      </if>
+      <if test="createdFrom != null">
+        and pay_time &gt;=#{createdFrom}
+      </if>
+      <if test="createdTo != null">
+        and pay_time &lt; #{createdTo}
+      </if>
+    </where>
+  </select>
+  
   <update id="setStatus">
     update trade set status=#{status.value} where id=#{id}
   </update>

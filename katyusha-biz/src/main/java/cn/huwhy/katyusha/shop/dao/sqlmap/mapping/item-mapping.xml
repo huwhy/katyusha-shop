@@ -31,6 +31,10 @@
     update item set status=#{status.value} where id=#{id}
   </update>
   
+  <update id="plusSaleNum">
+    update item set sale_num=sale_num+#{num} where id=#{id}
+  </update>
+  
   <insert id="saveContent" parameterType="ItemPo">
     insert into item_content(id, content)
     VALUES (#{id}, #{content})

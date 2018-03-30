@@ -14,7 +14,8 @@ public class OrderPo implements Serializable {
     private String title;
     private String spec;
     private String barcode;
-    private String num;
+    private String img;
+    private int num;
     private int price;
     private int postFee;
     private int totalAmount;
@@ -83,11 +84,19 @@ public class OrderPo implements Serializable {
         this.barcode = barcode;
     }
 
-    public String getNum() {
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
+
+    public int getNum() {
         return num;
     }
 
-    public void setNum(String num) {
+    public void setNum(int num) {
         this.num = num;
     }
 
