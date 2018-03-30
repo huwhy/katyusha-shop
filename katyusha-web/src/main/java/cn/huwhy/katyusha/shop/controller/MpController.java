@@ -18,6 +18,7 @@ public class MpController extends BaseController {
 
     @RequestMapping("js-sign")
     public Json jsSign(HttpServletRequest request, String url) {
+        logger.debug("js-sign: url-{}", url);
         return Json.SUCCESS().setData(mpConfigUtil.createJsapiSign(url));
     }
 
